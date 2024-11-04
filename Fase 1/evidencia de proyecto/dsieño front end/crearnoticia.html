@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body><br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h3>Crear Nueva Noticia</h3>
+                    </div>
+                    <form id="newsForm">
+                        <!-- Título -->
+                        <div class="form-group">
+                            <label for="newsTitle">Título de la Noticia</label>
+                            <input type="text" class="form-control" id="newsTitle" placeholder="Ingresa el título" required>
+                        </div>
+    
+                        <!-- Resumen -->
+                        <div class="form-group">
+                            <label for="newsSummary">Resumen</label>
+                            <textarea class="form-control" id="newsSummary" rows="3" placeholder="Escribe un resumen breve de la noticia..." required></textarea>
+                        </div>
+    
+                        <!-- Contenido -->
+                        <div class="form-group">
+                            <label for="newsContent">Contenido</label>
+                            <textarea class="form-control" id="newsContent" rows="6" placeholder="Escribe el contenido completo de la noticia..." required></textarea>
+                        </div>
+    
+                        <!-- Imagen -->
+                        <div class="form-group">
+                            <label for="newsImage">Subir Imagen (Opcional)</label>
+                            <input type="file" class="form-control-file" id="newsImage" accept="image/*">
+                        </div>
+    
+                        <!-- Categoría -->
+                        <div class="form-group">
+                            <label for="newsCategory">Categoría</label>
+                            <select class="form-control" id="newsCategory">
+                                <option>Selecciona una categoría</option>
+                                <option>Noticia</option>
+                                <option>Actividad</option>
+                                <option>Recomendacion</option>
+                                <option>Entretenimiento</option>
+                                <option>Tecnología</option>
+                            </select>
+                        </div>
+    
+                        <!-- Autor -->
+                        <div class="form-group">
+                            <label for="newsAuthor">Autor</label>
+                            <input type="text" class="form-control" id="newsAuthor" placeholder="Nombre del autor" required>
+                        </div>
+    
+                        <!-- Botón Enviar -->
+                        <button type="submit" class="btn btn-primary btn-block">Crear Noticia</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
