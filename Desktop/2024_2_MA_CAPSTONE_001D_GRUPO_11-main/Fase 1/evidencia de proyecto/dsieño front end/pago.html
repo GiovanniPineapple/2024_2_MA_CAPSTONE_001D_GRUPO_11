@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/jspay.js"></script>
+
+</head>
+<body>
+
+    <div class="payment-form">
+        <h4 class="text-center">Formulario de Pago</h4>
+        <form id="paymentForm">
+            <div class="form-group">
+                <label for="cardNumber">Número de Tarjeta:</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+            </div>
+            <div class="form-group">
+                <label for="cardExpiry">Fecha de Expiración:</label>
+                <input type="text" class="form-control" id="cardExpiry" placeholder="MM/AA" required>
+            </div>
+            <div class="form-group">
+                <label for="cardCVC">CVC:</label>
+                <input type="text" class="form-control" id="cardCVC" placeholder="123" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Pagar</button>
+        </form>
+    </div>
+
+</body>
+</html>
