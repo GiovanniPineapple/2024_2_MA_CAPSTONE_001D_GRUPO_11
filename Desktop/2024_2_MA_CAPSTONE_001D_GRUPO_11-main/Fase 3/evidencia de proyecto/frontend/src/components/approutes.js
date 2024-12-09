@@ -33,6 +33,9 @@ import NoticeDetail from './NoticeDetail';
 import FeedbackForm from './FeedbackForm';
 import FeedbackList from './FeedbackList';
 import AdminCalendar from './AdminCalendar';
+import Report from './Reports';
+import ClientInstagramPosts from './ClientInstagramPosts';
+import AdminInstagramPosts from './AdminInstagramPosts';
 
 const AppRoutes = () => {
     const { authData } = useAuth();
@@ -48,6 +51,7 @@ const AppRoutes = () => {
             <Route path="/servicelistcardnu" element={<ServiceListCardnu />} />
             <Route path="/notice/:id" element={<NoticeDetail />} />
             <Route path="/feedback-list" element={<FeedbackList />} />
+            <Route path="/ClientInstagramPosts" element={<ClientInstagramPosts />} />
             <Route path="*" element={<NotFound />} />
             
             {/* Rutas compartidas (Cliente y Admin) */}
@@ -60,6 +64,9 @@ const AppRoutes = () => {
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-failed" element={<PaymentFailed />} />
                     <Route path="/payment-result" element={<PaymentResult />} />
+                    <Route path="/feedback-form" element={<FeedbackForm />} />
+                    <Route path="/ClientInstagramPosts" element={<ClientInstagramPosts />} />
+                    
                     <Route path="*" element={<NotFound />} />
                 </>
             )}
@@ -71,8 +78,8 @@ const AppRoutes = () => {
                     <Route path="/confirm-appointment" element={<ConfirmAppointment />} />
                     <Route path="/ServiceListCard" element={<ServiceListCard />} />
                     <Route path="/appointmentandpayment" element={<AppointmentAndPayment />} />
-                    <Route path="/feedback-form" element={<FeedbackForm />} />
                     <Route path="/payment-result" element={<PaymentResult />} />
+                    
                     
                 </>
             )}
@@ -95,7 +102,9 @@ const AppRoutes = () => {
                     <Route path="/NoticesList" element={<NoticesList />} />
                     <Route path="/AdminCalendar" element={<AdminCalendar />} />
                     <Route path="/horario" element={<Horario />} />
-
+                    <Route path="/Reports" element={<Report />} />
+                    <Route path="/AdminInstagramPosts" element={<AdminInstagramPosts />} />
+                    
                 </>
             )}
 

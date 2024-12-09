@@ -46,25 +46,31 @@ const transaction = new WebpayPlus.Transaction();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'https://11csvp4w-3000.brs.devtunnels.ms', 
+  origin: 'http://localhost:3000',  
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, 
 };
 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 // Aplica CORS a todas las rutas
 app.use(cors(corsOptions));
 
 app.use(cors());
-// Si deseas manejar las solicitudes OPTIONS (preflight) de manera explícita:
-app.options('*', cors(corsOptions)); // Manejo de preflight para todas las rutas
+
+app.options('*', cors(corsOptions)); 
 
 // Middlewares generales
-app.use(bodyParser.json()); // Manejo de JSON
-app.use(express.urlencoded({ extended: true })); // Manejo de URL-encoded
-// app.use('/appointments', appointmentRoutes);
+app.use(bodyParser.json()); 
+app.use(express.urlencoded({ extended: true })); 
+
 const morgan = require('morgan');
-app.use(morgan('dev')); // Logger para desarrollo
+app.use(morgan('dev'));
 app.use(router);
 // Generación del token JWT
 
@@ -741,7 +747,7 @@ app.get('/appointments/calendar', (req, res) => {
     AND MOD(id_appoin, 2) = 0
     AND DATEDIFF(CURDATE(), created_at) <= 40
   `;
-
+  
   db.execute(query, (err, results) => {
     if (err) {
       console.error('Error al obtener las citas:', err);
@@ -1596,6 +1602,266 @@ app.get('/feedback', (req, res) => {
     });
   });
 });
+
+//reportes
+
+app.get('/report/most-visited-comuna', async (req, res) => {
+  try {
+    const query = `
+      SELECT address_appoin, COUNT(*) AS visit_count
+      FROM appointments
+      WHERE MOD(id_appoin, 2) = 0 
+      GROUP BY address_appoin
+      ORDER BY visit_count DESC
+      LIMIT 1;
+    `;
+    console.log('Ejecutando consulta SQL:', query);
+
+    const [results] = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    console.log('Resultados de la consulta:', results);
+
+    // Verificar si los resultados están vacíos
+    if (!results || results.length === 0) {
+      console.log('No se encontraron resultados');
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    // Asegurarse de que los campos existen en el primer resultado
+    const comuna = results.address_appoin;
+    const visitCount = results.visit_count;
+
+    if (comuna === undefined || visitCount === undefined) {
+      console.log('Datos faltantes en la respuesta de la consulta');
+      return res.status(500).json({ error: 'Datos incompletos en la respuesta de la consulta.' });
+    }
+
+    // Enviar los datos correctamente al frontend
+    res.json({ comuna, visitCount });
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/report/least-visited-comuna', async (req, res) => {
+  try {
+    const query = `
+      SELECT address_appoin, COUNT(*) AS visit_count
+      FROM appointments
+      WHERE MOD(id_appoin, 2) = 0 
+      GROUP BY address_appoin
+      ORDER BY visit_count ASC
+      LIMIT 1;
+    `;
+
+    const [results] = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    const comuna = results.address_appoin;
+    const visitCount = results.visit_count;
+
+    if (comuna === undefined || visitCount === undefined) {
+      return res.status(500).json({ error: 'Datos incompletos en la respuesta de la consulta.' });
+    }
+
+    res.json({ comuna, visitCount });
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/report/most-day-reserved', async (req, res) => {
+  try {
+    const query = `
+      SELECT day, COUNT(*) AS appointment_count
+      FROM appointments
+      WHERE MOD(id_appoin, 2) = 0 
+      GROUP BY day
+      ORDER BY appointment_count DESC
+      LIMIT 1;
+
+    `;
+
+    const [results] = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    const day = results.day;
+    const appointmentcount = results.appointment_count;
+
+    if (day === undefined || appointmentcount === undefined) {
+      return res.status(500).json({ error: 'Datos incompletos en la respuesta de la consulta.' });
+    }
+
+    res.json({ day, appointmentcount });
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/report/least-day-reserved', async (req, res) => {
+  try {
+    const query = `
+      SELECT day, COUNT(*) AS appointment_count
+      FROM appointments
+      WHERE MOD(id_appoin, 2) = 0 
+      GROUP BY day
+      ORDER BY appointment_count ASC
+      LIMIT 1;
+
+    `;
+
+    const [results] = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    const day = results.day;
+    const appointmentcount = results.appointment_count;
+
+    if (day === undefined || appointmentcount === undefined) {
+      return res.status(500).json({ error: 'Datos incompletos en la respuesta de la consulta.' });
+    }
+
+    res.json({ day, appointmentcount });
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+app.get('/report/per-comuna', async (req, res) => {
+  try {
+    const query = `
+      SELECT address_appoin, SUM(service_price) AS total_income
+      FROM appointments
+      WHERE MOD(id_appoin, 2) = 0
+      GROUP BY address_appoin
+      ORDER BY total_income DESC;
+    `;
+
+    const results = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+
+    if (!results || results.length === 0) {
+      console.warn('Consulta ejecutada correctamente, pero no se encontraron resultados.');
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    // Log para mostrar los resultados en consola
+    console.log('Resultados de la consulta:', results);
+
+    // Devolver la lista completa de resultados
+    res.json(results);
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: 'Error en el servidor. Por favor, intenta más tarde.' });
+  }
+});
+
+
+
+//instagra post
+app.post('/api/instagram-posts', async (req, res) => {
+  const { post_link, image_url, caption } = req.body;
+  try {
+    const query = `INSERT INTO instagram_posts (post_link, image_url, caption) VALUES (?, ?, ?)`;
+    await db.execute(query, [post_link, image_url, caption]);
+    res.status(201).json({ message: 'Post agregado exitosamente' });
+  } catch (error) {
+    console.error('Error al agregar post:', error);
+    res.status(500).json({ error: 'Error al agregar post' });
+  }
+});
+
+// GET: Para obtener todos los posts
+
+
+app.get('/api/instagram-posts', async (req, res) => {
+  try {
+    const query = "SELECT * FROM instagram_posts ORDER BY created_at DESC";
+
+    const results = await new Promise((resolve, reject) => {
+      db.execute(query, (err, results) => {
+        if (err) {
+          console.error('Error al ejecutar la consulta:', err);
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+
+    if (!results || results.length === 0) {
+      console.warn('Consulta ejecutada correctamente, pero no se encontraron resultados.');
+      return res.status(404).json({ error: 'No se encontraron resultados.' });
+    }
+
+    console.log('Resultados de la consulta:', results);
+ 
+    res.json(results);
+  } catch (error) {
+    console.error('Error en el servidor:', error);
+    res.status(500).json({ error: 'Error en el servidor. Por favor, intenta más tarde.' });
+  }
+});
+
+
+
+
+
 
 // Inicia el servidor
 app.listen(PORT, () => {

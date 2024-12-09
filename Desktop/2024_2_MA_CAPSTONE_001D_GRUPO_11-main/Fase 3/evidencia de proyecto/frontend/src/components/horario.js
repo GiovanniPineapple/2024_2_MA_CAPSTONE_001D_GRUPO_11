@@ -8,9 +8,11 @@ const Horario = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        // Traer solo las citas con estado 'Pagado' desde el backend
         const response = await axios.get('http://localhost:5000/appointments/calendar');
         setAppointments(response.data); // Los eventos de las citas
+
+
+        
       } catch (error) {
         console.error('Error al cargar las citas:', error);
       }

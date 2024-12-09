@@ -1,35 +1,39 @@
-// src/components/Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';  // Asegúrate de importar correctamente el hook
+import { useAuth } from '../context/AuthContext'; // Asegúrate de importar correctamente el hook
+import '../styles/header.css'; // Asegúrate de crear y usar este archivo de estilos
 
 const Header = () => {
   const { authData, logout } = useAuth();
   const role = authData?.role || 'no_logeado';
   const userName = authData?.userName || '';
   const UserId = authData?.UserId || '';
+
   return (
     <header className="header">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          {/* Logo */}
           <div className="navbar-brand">
-            <Link to="/" className="logo-text">AndesK9</Link>
+            <Link to="/" className="logo">
+              <img src="./img/logo2.PNG" alt="AndesK9 Logo" className="logo-img" />
+            </Link>
           </div>
-
-          {/* Botón para móviles */}
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
-
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              {/* Links generales */}
+            <ul className="navbar-nav ms-auto d-flex flex-wrap justify-content-center">
               <li className="nav-item">
                 <Link to="/" className="nav-link">Inicio</Link>
               </li>
-
-              {/* Si el usuario no está logueado */}
               {role === 'no_logeado' && (
                 <>
                   <li className="nav-item">
@@ -49,8 +53,6 @@ const Header = () => {
                   </li>
                 </>
               )}
-
-              {/* Si es un administrador */}
               {role === 'admin' && (
                 <>
                   <li className="nav-item">
@@ -66,12 +68,10 @@ const Header = () => {
                     <Link to="/servicelist" className="nav-link">Servicios</Link>
                   </li>
                   <li className="nav-item">
-                    <button onClick={logout} className="btn btn-outline-danger">Cerrar Sesión</button>
+                    <button onClick={logout} className="logout-btn">Cerrar Sesión</button>
                   </li>
                 </>
               )}
-
-              {/* Si es un cliente */}
               {role === 'cliente' && (
                 <>
                   <li className="nav-item">
@@ -84,12 +84,10 @@ const Header = () => {
                     <Link to="/select-appointment" className="nav-link">Agendar Cita</Link>
                   </li>
                   <li className="nav-item">
-                    <button onClick={logout} className="btn btn-outline-danger">Cerrar Sesión</button>
+                    <button onClick={logout} className="logout-btn">Cerrar Sesión</button>
                   </li>
                 </>
               )}
-
-              {/* Si es un entrenador */}
               {role === 'entrenador' && (
                 <>
                   <li className="nav-item">
@@ -99,7 +97,7 @@ const Header = () => {
                     <Link to="/horario" className="nav-link">Horario</Link>
                   </li>
                   <li className="nav-item">
-                    <button onClick={logout} className="btn btn-outline-danger">Cerrar Sesión</button>
+                    <button onClick={logout} className="btn btn-outline-dark rounded-button">Cerrar Sesión</button>
                   </li>
                 </>
               )}
